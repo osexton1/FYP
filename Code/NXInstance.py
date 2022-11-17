@@ -14,5 +14,11 @@ class NXInstance:
     def getVertices(self):
         return self.__graph.nodes.data()
 
+    def search(self, a, b):
+        return nx.dijkstra_path(self.__graph, a, b)
+
+    def removeEdge(self, a, b):
+        self.__graph.remove_edge(a, b)
+
 if __name__ == "__main__":
     testGraph = NXInstance("graph.txt")
