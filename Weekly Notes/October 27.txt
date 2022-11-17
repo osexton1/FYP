@@ -1,0 +1,27 @@
+Combinatorial Search and Flow Algorithms
+
+*Recommend Python but not mandatory*
+    - I am going to use Python
+
+Read graph in from a file (No GUI requirement but libraries exist for this)
+                          (OpenStreet Maps is choosing the road network approach)
+
+Start with graph with all edges closed
+Run Dijkstra on A -> B, open these edges
+Repeat for all paths we're allowing
+Create a new graph from all the opened edges
+Check if X -> Y is possible (Banned path)
+If X -> Y is possible, must pick edges to remove
+Repeat the process with those edges removed
+
+Create your own search process
+Minimal cutsets for X and Y -> flow algorithms can be implemented here
+
+Compare these two approaches against eachother in the report
+
+Alternative twist:
+    Allow A -> B and C -> D without intersecting paths
+        - Two independent paths
+
+Steiner Trees connecting paths with no intersections between paths allowed vs prohibited paths
+Steiner algorithm is O(N^k) complexity and is exponential to the size of the Steiner set

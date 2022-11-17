@@ -1,0 +1,29 @@
+Discussed project details and approaches (e.g. Flow Algorithms)
+
+Graphs represent topology of buildings:
+    Doors are represented by a pair of nodes on either side of the door with an edge between them, which can be open or closed based on if the door is locked down or not
+    Dynamically update the areas being locked down and reopened
+
+Two main ways of approaching the project:
+    1. Graphing algorithms approach from second year Algorithms classes
+    2. Constraint programming - Choco library (Java library) - involves coding directly
+                              - Minizinc (General library) - closer to 1st year
+        - Similar approach to predicate logic from first year
+
+Flow Algorithms:
+    Accounting for paths and their use
+        - There are standard algorithms for this
+
+One page outline of the project due by November 2nd
+
+Second marker only sees the report when it comes to grading the project
+
+15 credit module
+    - Analysis, Design, Description, Testing (be thorough here), Evaluation
+    - Must be your own code (ALlowed external libraries) (No plagiarism)
+    - Marks depend on how difficult/easy the project is and how well it has been achieved
+
+** Leave enough time at the end to write a good report **
+** Keep a log of what you've attempted, even if it doesn't make it to the final implementation **
+
+Textbook from the Algorithms and Data Structures II module may prove useful

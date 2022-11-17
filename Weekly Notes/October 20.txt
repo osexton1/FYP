@@ -1,0 +1,11 @@
+Discussed potential approaches to the project in more detail
+
+Combinatorial Search:
+    Find X -> Y, check is A -> B is also possible
+    Reconfigure if so
+
+Cut Set:
+    Subgraph isolation
+    Identify the minimum cut set for paths we wish to disallow
+
+NetworkX library will be used
