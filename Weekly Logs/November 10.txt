@@ -1,0 +1,32 @@
+Decided to use NetworkX library
+
+Search Algorithm
+
+NetworkX graph instance
+    Link to set of vertices in my own class
+        - Pairs paths allowed
+        - Pairs paths banned/ illegal
+
+Own Class:
+    Need all edges and vertices from the NetworkX instance
+    Notify NetworkX instance of changes to edges and run Dijkstra
+
+    Attributes:
+    List of vertices
+    Dictionary of edges - (key, value) = (description of edge, included in graph(boolean))
+
+Subgraph of allowed paths and check if any illegal paths are traversable
+
+Stack of decisions
+    Systematic trawl through all combinations
+
+Choosing which edges of previous graph to throw away
+    Question: How do we intelligently choose edges to remove from the graph?
+        Minimum cutset algorithm? Flow algorithms? - (this is more classic CS approach)
+
+Series of statements for allowed and disallowed paths. Score these as the set satisfies them (1 point for each statement satisfied)
+
+Three main approaches:
+    1. Randomly choose edges to open - score the statements, local search changes and loop
+    2. Dijkstra approach - score negative statements, informed local search changes and loop
+    3. Dijkstra approch - minimum cut set, score the statements, local search and loop
