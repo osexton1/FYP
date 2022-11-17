@@ -1,0 +1,6 @@
+The Python NetworkX library is a package for the creation, manipulation, and study of the structure, dynamics, and functions of complex networks.
+
+Given that the basis for this project revolves around Graphs and their topology, NetworkX seems the best choice for implementing this project.
+
+NetworkX comes with many standard graph algorithms already implemented, including Dijkstra's algorithm which is an important one for the purposes of this project,
+especially since the algorithm will be used extensively.
