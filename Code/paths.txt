@@ -1,0 +1,4 @@
+Legal, Node 1, Node 10
+Legal, Node 1, Node 6
+Illegal, Node 1, Node 4
+Illegal, Node 3, Node 5
