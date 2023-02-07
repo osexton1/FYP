@@ -1,4 +1,5 @@
 import networkx as nx
+import matplotlib.pyplot as plt
 
 class NXInstance:
 
@@ -19,6 +20,12 @@ class NXInstance:
 
     def removeEdge(self, a, b):
         self.__graph.remove_edge(a, b)
+
+    def drawGraph(self):
+        nx.write_graphml(self.__graph, "./outputGraph")
+        nx.draw_circular(self.__graph, with_labels=True)
+        plt.savefig('outputGraph.png')
+
 
 if __name__ == "__main__":
     testGraph = NXInstance("graph.txt")
