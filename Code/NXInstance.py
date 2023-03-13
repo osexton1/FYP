@@ -5,6 +5,9 @@ class NXInstance:
 
     def __init__(self, sourcefile):
         self.__graph = nx.read_gml(sourcefile)
+        nx.draw_circular(self.__graph, with_labels=True)
+        plt.savefig('sourceGraph.png')
+        plt.clf()
 
     def getGraph(self):
         return self.__graph

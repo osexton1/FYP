@@ -1,0 +1,24 @@
+def computeGraph():
+    invalidPaths = True
+
+    while invalidPaths:
+        validPaths = []
+        invalidPaths = []
+
+        for validPath:
+            if validPath is traversable:
+                Append validPath to validPaths
+            else:
+                output failure message
+        for invalidPath:
+            if invalidPath is traversable:
+                Append invalidPath to invalidPaths
+            else:
+                Remove invalid pair from list
+
+        if ∃path in invalidPaths which is traversable:
+            remove the last edge in the path
+            print the removed edge
+        else:
+            output success message
+            invalidPaths = False
