@@ -15,8 +15,8 @@
     <node id="Node 8" />
     <node id="Node 9" />
     <node id="Node 10" />
-    <edge source="Node 1" target="Node 2">
-      <data key="d2">12</data>
+    <edge source="Node 1" target="Node 5">
+      <data key="d2">20</data>
       <data key="d3">1</data>
     </edge>
     <edge source="Node 1" target="Node 6">
@@ -27,16 +27,16 @@
       <data key="d2">12</data>
       <data key="d3">1</data>
     </edge>
+    <edge source="Node 2" target="Node 5">
+      <data key="d2">25</data>
+      <data key="d3">1</data>
+    </edge>
     <edge source="Node 2" target="Node 8">
       <data key="d2">10</data>
       <data key="d3">1</data>
     </edge>
     <edge source="Node 2" target="Node 9">
       <data key="d2">6</data>
-      <data key="d3">1</data>
-    </edge>
-    <edge source="Node 3" target="Node 4">
-      <data key="d2">4</data>
       <data key="d3">1</data>
     </edge>
     <edge source="Node 4" target="Node 3">
@@ -73,6 +73,10 @@
     </edge>
     <edge source="Node 8" target="Node 2">
       <data key="d2">10</data>
+      <data key="d3">1</data>
+    </edge>
+    <edge source="Node 8" target="Node 4">
+      <data key="d2">11</data>
       <data key="d3">1</data>
     </edge>
     <edge source="Node 8" target="Node 10">
