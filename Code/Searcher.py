@@ -33,6 +33,9 @@ class Searcher:
     def removeEdge(self, a, b):
         self.__graph.removeEdge(a, b)
 
+    def addEdge(self, a, b):
+        self.__graph.addEdge(a, b)
+
     def computeGraphV1(self):
         # All paths will always be traversable at the first loop
         invalidTraversable = True
@@ -70,6 +73,53 @@ class Searcher:
             else:
                 print('It is possible to compute a graph where no illegal paths are traversable')
                 invalidTraversable = False
+
+    def computeGraphV2(self):
+        # All paths will always be traversable at the first loop
+        removedEdges = []
+        validPaths = []
+        illegalPaths = []
+        legalBroken = False
+        invalidTraversable = True
+        while invalidTraversable:
+            try:
+                for path in self.__pathsLegal:
+                    if self.searchGraph(path[0], path[1]) not in validPaths:
+                        validPaths.append(self.searchGraph(path[0], path[1]))
+            except nx.exception.NetworkXNoPath:
+                legalBroken = True
+                continue
+            try:
+                for path in self.__pathsIllegal:
+                    if self.searchGraph(path[0], path[1]) not in illegalPaths:
+                        illegalPaths.append(self.searchGraph(path[0], path[1]))
+            except nx.exception.NetworkXNoPath:
+                continue
+            # Modify this to store the removed edge in case it breaks valid paths
+            for path in illegalPaths:
+                print('Path: ' + str(path))
+                last_node = illegalPaths[0].pop()
+                second_last_node = illegalPaths[0].pop()
+                self.removeEdge(second_last_node, last_node)
+                removedEdges.append((second_last_node, last_node))
+                print('Removed Edge: ' + second_last_node + ' -> ' + last_node)
+
+            if legalBroken and len(removedEdges) > 0:
+                u, v = removedEdges.pop(0)
+                self.addEdge(u, v)
+                print('Restored Edge: ' + u + ' -> ' + v)
+                print('Illegal Paths after Restoration: ' + str(illegalPaths))
+                print(removedEdges)
+                legalBroken = False
+            elif legalBroken and not len(removedEdges) > 0:
+                print('Here')
+                continue
+            else:
+                print('It is not possible to compute such a graph')
+                invalidTraversable = False
+            # else:
+            #     print('It is possible to compute a graph where no illegal paths are traversable')
+            #     invalidTraversable = False
 
     def computeCutsV1(self, timeout):
         legal = [path for path in self.__pathsLegal]
@@ -162,5 +212,5 @@ class Searcher:
 if __name__ == "__main__":
     graph = NXInstance("graph.txt")
     searcher = Searcher(graph, "graph.txt")
-    searcher.computeCutsV1(120)
+    searcher.computeGraphV1()
     searcher.drawGraph()

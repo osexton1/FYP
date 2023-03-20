@@ -24,6 +24,9 @@ class NXInstance:
     def removeEdge(self, a, b):
         self.__graph.remove_edge(a, b)
 
+    def addEdge(self, a, b):
+        self.__graph.add_edge(a, b)
+
     def drawGraph(self):
         nx.write_graphml(self.__graph, "./outputGraph")
         nx.draw_circular(self.__graph, with_labels=True)
