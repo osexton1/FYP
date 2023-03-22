@@ -27,6 +27,9 @@ class NXInstance:
     def addEdge(self, a, b):
         self.__graph.add_edge(a, b)
 
+    def minEdgeCut(self, a, b):
+        return nx.minimum_edge_cut(self.__graph, a, b)
+
     def drawGraph(self):
         nx.write_graphml(self.__graph, "./outputGraph")
         nx.draw_circular(self.__graph, with_labels=True)
