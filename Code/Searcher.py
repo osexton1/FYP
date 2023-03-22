@@ -36,6 +36,9 @@ class Searcher:
     def addEdge(self, a, b):
         self.__graph.addEdge(a, b)
 
+    def minEdgeCut(self, a, b):
+        return self.__graph.minEdgeCut(a, b)
+
     def computeGraphV1(self):
         # All paths will always be traversable at the first loop
         invalidTraversable = True
@@ -205,11 +208,99 @@ class Searcher:
                 print("Success!!")
                 print("Removed: " + str(removedEdges))
 
+    def computeCutsV2(self, timeout):
+        legal = [path for path in self.__pathsLegal]
+        illegal = [path for path in self.__pathsIllegal]
+        start_time = time()
+        doNotRemove = []
+        removedEdges = []
+        time_remains = True
+        for pair in legal:
+            for edge in self.minEdgeCut(pair[0], pair[1]):
+                if edge not in doNotRemove:
+                    doNotRemove.append(edge)
+        print('DO NOT REMOVE: ' + str(doNotRemove))
+        print()
+        while time_remains:
+            for pair in illegal:
+                try:
+                    print('Testing Illegal Path: ' + str(pair))
+                    path = self.searchGraph(pair[0], pair[1])
+                    print('Found Illegal Path: ' + str(path))
+                    print()
+                    max_index = len(path) - 1
+                    remove_index = randint(0, max_index)
+                    if remove_index == max_index:
+                        if (path[remove_index-1], path[remove_index]) not in doNotRemove: 
+                            self.removeEdge(path[remove_index-1], path[remove_index])
+                            removedEdges.append((path[remove_index-1], path[remove_index]))
+                    else:
+                        if (path[remove_index], path[remove_index+1]) not in doNotRemove:
+                            self.removeEdge(path[remove_index], path[remove_index+1])
+                            removedEdges.append((path[remove_index], path[remove_index+1]))
+                except:
+                    # Should only reach this case if the path is already not traversable
+                    continue
+            for pair in legal:
+                try:
+                    print('Testing Legal Path: ' + str(pair))
+                    path = self.searchGraph(pair[0], pair[1])
+                    print('Found Legal Path: ' + str(path))
+                    print()
+                except:
+                    # A legal path is broken -> reset and start over
+                    print('Failed to find Legal Path')
+                    print('=== RESETTING ===')
+                    self.__graph = NXInstance(self.__original_state)
+                    removedEdges = []
+                    illegal = [path for path in self.__pathsIllegal]
+                    legal = [path for path in self.__pathsLegal]
+                    break
+            # Don't want to use nx exception for loop control
+            illegalCounter = 0
+            for pair in illegal:
+                try:
+                    print('Testing Illegal Path: %s again' % str(pair))
+                    path = self.searchGraph(pair[0], pair[1])
+                    print('Found Illegal Path: %s again' % str(path))
+                    print()
+                    illegalCounter += 1
+                    time_passed = time() - start_time
+                    if time_passed < timeout:
+                        continue
+                    elif time_passed > timeout:
+                        time_remains = False
+                        print("Timed Out Illegal")
+                        break
+                except:
+                    continue
+            legalCounter = len(legal)
+            for pair in legal:
+                try:
+                    print('Testing Legal Path: %s again' % str(pair))
+                    path = self.searchGraph(pair[0], pair[1])
+                    print('Found Legal Path: %s again' % str(path))
+                    print()
+                    legalCounter -= 1
+                    time_passed = time() - start_time
+                    if time_passed < timeout:
+                        continue
+                    elif time_passed > timeout:
+                        time_remains = False
+                        print("Timed Out Legal")
+                        break
+                except:
+                    break
+            if illegalCounter == 0 and legalCounter == 0:
+                time_remains = False
+                print("Success!!")
+                print("Removed: " + str(removedEdges))
+
     def drawGraph(self):
         self.__graph.drawGraph()
 
 if __name__ == "__main__":
     graph = NXInstance("graph.txt")
     searcher = Searcher(graph, "graph.txt")
-    searcher.computeCutsV1(120)
+    searcher.computeCutsV2(120)
     searcher.drawGraph()
