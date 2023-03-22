@@ -97,26 +97,31 @@ class Searcher:
                 continue
             # Modify this to store the removed edge in case it breaks valid paths
             for path in illegalPaths:
-                print('Path: ' + str(path))
-                last_node = illegalPaths[0].pop()
-                second_last_node = illegalPaths[0].pop()
+                last_node = path.pop()
+                second_last_node = path.pop()
+                illegalPaths.pop(0)
                 self.removeEdge(second_last_node, last_node)
                 removedEdges.append((second_last_node, last_node))
                 print('Removed Edge: ' + second_last_node + ' -> ' + last_node)
 
+            print('Removed Edges: ' + str(removedEdges))
             if legalBroken and len(removedEdges) > 0:
-                u, v = removedEdges.pop(0)
-                self.addEdge(u, v)
-                print('Restored Edge: ' + u + ' -> ' + v)
+                u = removedEdges.pop()
+                print(u)
+                self.addEdge(u[0], u[1])
+                print('Restored Edge: ' + u[0] + ' -> ' + u[1])
                 print('Illegal Paths after Restoration: ' + str(illegalPaths))
                 print(removedEdges)
                 legalBroken = False
-            elif legalBroken and not len(removedEdges) > 0:
+            elif legalBroken and len(removedEdges) == 0:
                 print('Here')
                 continue
-            else:
-                print('It is not possible to compute such a graph')
-                invalidTraversable = False
+            """
+                *** Ask Ken about this, algorithm is just looping here atm ***
+            """
+            # else:
+            #     print('It is not possible to compute such a graph')
+            #     invalidTraversable = False
             # else:
             #     print('It is possible to compute a graph where no illegal paths are traversable')
             #     invalidTraversable = False
@@ -144,12 +149,7 @@ class Searcher:
                         removedEdges.append((path[remove_index], path[remove_index+1]))
                 except:
                     # Should only reach this case if the path is already not traversable
-                    if len(illegal):
-                        illegal.pop(0)
-                    else:
-                        time_remains = False
-                        print("The graph is already appropriately configured")
-                        return self.drawGraph()
+                    continue
             for pair in legal:
                 try:
                     print('Testing Legal Path: ' + str(pair))
@@ -176,13 +176,13 @@ class Searcher:
                     illegalCounter += 1
                     time_passed = time() - start_time
                     if time_passed < timeout:
-                        break
+                        continue
                     elif time_passed > timeout:
                         time_remains = False
                         print("Timed Out Illegal")
                         break
                 except:
-                    break
+                    continue
             legalCounter = len(legal)
             for pair in legal:
                 try:
@@ -193,7 +193,7 @@ class Searcher:
                     legalCounter -= 1
                     time_passed = time() - start_time
                     if time_passed < timeout:
-                        break
+                        continue
                     elif time_passed > timeout:
                         time_remains = False
                         print("Timed Out Legal")
@@ -204,7 +204,6 @@ class Searcher:
                 time_remains = False
                 print("Success!!")
                 print("Removed: " + str(removedEdges))
-                self.drawGraph()
 
     def drawGraph(self):
         self.__graph.drawGraph()
@@ -212,5 +211,5 @@ class Searcher:
 if __name__ == "__main__":
     graph = NXInstance("graph.txt")
     searcher = Searcher(graph, "graph.txt")
-    searcher.computeGraphV1()
+    searcher.computeCutsV1(120)
     searcher.drawGraph()
