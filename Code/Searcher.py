@@ -40,23 +40,21 @@ class Searcher:
         return self.__graph.minEdgeCut(a, b)
 
     def computeGraphV1(self):
-        # All paths will always be traversable at the first loop
         invalidTraversable = True
-        while invalidTraversable:
-            validPaths = []
-            illegalPaths = []
-            try:
-                for path in self.__pathsLegal:
-                    validPaths.append(self.searchGraph(path[0], path[1]))
-            except nx.exception.NetworkXNoPath:
-                """
-                    All paths are traversable at the first check, so this code 
-                    should only be reached at the second pass.
+        validPaths = []
+        try:
+            for path in self.__pathsLegal:
+                validPaths.append(self.searchGraph(path[0], path[1]))
+        except nx.exception.NetworkXNoPath:
+            """
+                If an error occurs here, it is never possible to connect a pair
+                of nodes in a legal path
+            """
+            print('It is not possible to compute such a graph')
+            invalidTraversable = False
 
-                    If valid paths are broken, remove the next edge in the illegal
-                    path and then restore the original moved edge
-                """
-                print('It is not possible to compute such a graph')
+        while invalidTraversable:
+            illegalPaths = []
             try:
                 for path in self.__pathsIllegal:
                     illegalPaths.append(self.searchGraph(path[0], path[1]))
@@ -67,7 +65,6 @@ class Searcher:
                 else:
                     self.__pathsIllegal = []
                     continue
-            # Modify this to store the removed edge in case it breaks valid paths
             if len(self.__pathsIllegal) > 0:
                 last_node = illegalPaths[0].pop()
                 second_last_node = illegalPaths[0].pop()
@@ -78,19 +75,16 @@ class Searcher:
                 invalidTraversable = False
 
     def computeGraphV2(self):
-        # All paths will always be traversable at the first loop
         removedEdges = []
         validPaths = []
-        illegalPaths = []
-        legalBroken = False
         invalidTraversable = True
         while invalidTraversable:
+            illegalPaths = []
             try:
                 for path in self.__pathsLegal:
                     if self.searchGraph(path[0], path[1]) not in validPaths:
                         validPaths.append(self.searchGraph(path[0], path[1]))
             except nx.exception.NetworkXNoPath:
-                legalBroken = True
                 continue
             try:
                 for path in self.__pathsIllegal:
@@ -98,36 +92,52 @@ class Searcher:
                         illegalPaths.append(self.searchGraph(path[0], path[1]))
             except nx.exception.NetworkXNoPath:
                 continue
-            # Modify this to store the removed edge in case it breaks valid paths
+            
             for path in illegalPaths:
+                print(path)
                 last_node = path.pop()
-                second_last_node = path.pop()
-                illegalPaths.pop(0)
-                self.removeEdge(second_last_node, last_node)
-                removedEdges.append((second_last_node, last_node))
-                print('Removed Edge: ' + second_last_node + ' -> ' + last_node)
-
-            print('Removed Edges: ' + str(removedEdges))
-            if legalBroken and len(removedEdges) > 0:
-                u = removedEdges.pop()
-                print(u)
-                self.addEdge(u[0], u[1])
-                print('Restored Edge: ' + u[0] + ' -> ' + u[1])
-                print('Illegal Paths after Restoration: ' + str(illegalPaths))
-                print(removedEdges)
-                legalBroken = False
-            elif legalBroken and len(removedEdges) == 0:
-                print('Here')
-                continue
-            """
-                *** Ask Ken about this, algorithm is just looping here atm ***
-            """
-            # else:
-            #     print('It is not possible to compute such a graph')
-            #     invalidTraversable = False
-            # else:
-            #     print('It is possible to compute a graph where no illegal paths are traversable')
-            #     invalidTraversable = False
+                next_node = path.pop()
+                pair = (next_node, last_node)
+                print('Pair: ' + str(pair))
+                self.removeEdge(next_node, last_node)
+                print('Removed Edge: ' + pair[0] + ' -> ' + pair[1] + ' before looping')
+                for validPath in self.__pathsLegal:
+                    print('Valid: ' + str(validPath))
+                    try:     
+                        self.searchGraph(validPath[0], validPath[1])
+                    except nx.exception.NetworkXNoPath:
+                        validBroken = True
+                        print('Path broken: ' + str(validPath))
+                        while validBroken:
+                            # Remove next edge from sequence
+                            next_removed = path.pop()
+                            self.removeEdge(next_removed, pair[0])
+                            print('Removed Edge: ' + next_removed + ' -> ' + pair[0])
+                            # Restore the original removed edge
+                            self.addEdge(pair[0], pair[1])
+                            print('Restored Edge: ' + pair[0] + ' -> ' + pair[1])
+                            pair = (next_removed, pair[0])
+                            print('Next pair: ' + str(pair)) 
+                            try:     
+                                route = self.searchGraph(validPath[0], validPath[1])
+                                print('Found route: ' + str(route))
+                                validBroken = False
+                            except nx.exception.NetworkXNoPath:
+                                print('Reached This Point')
+                                continue    
+            illegalCounter = 0
+            for pair in self.__pathsIllegal:
+                try:
+                    print('Testing Illegal Path: %s again' % str(pair))
+                    path = self.searchGraph(pair[0], pair[1])
+                    print('Found Illegal Path: %s again' % str(path))
+                    print()
+                    illegalCounter += 1
+                except:
+                    continue
+            if illegalCounter == 0:
+              invalidTraversable = False
+            
 
     def computeCutsV1(self, timeout):
         legal = [path for path in self.__pathsLegal]
@@ -168,7 +178,6 @@ class Searcher:
                     illegal = [path for path in self.__pathsIllegal]
                     legal = [path for path in self.__pathsLegal]
                     break
-            # Don't want to use nx exception for loop control
             illegalCounter = 0
             for pair in illegal:
                 try:
@@ -302,5 +311,5 @@ class Searcher:
 if __name__ == "__main__":
     graph = NXInstance("graph.txt")
     searcher = Searcher(graph, "graph.txt")
-    searcher.computeCutsV2(120)
+    searcher.computeGraphV1()
     searcher.drawGraph()
