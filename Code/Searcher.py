@@ -71,11 +71,21 @@ class Searcher:
                 self.removeEdge(second_last_node, last_node)
                 print('Removed Edge: ' + second_last_node + ' -> ' + last_node)
             else:
-                print('It is possible to compute a graph where no illegal paths are traversable')
-                invalidTraversable = False
+                legalCounter = len(validPaths)
+                for path in self.__pathsLegal:
+                    try:
+                        self.searchGraph(path[0], path[1])
+                        legalCounter -= 1
+                    except:
+                        print('It is not possible to compute such a graph')
+                        invalidTraversable = False
+                        break
+                if legalCounter == 0:
+                    print('It is possible to compute a graph where no illegal paths are traversable')
+                    invalidTraversable = False
+                    self.drawGraph('outputGraphV1')
 
     def computeGraphV2(self):
-        removedEdges = []
         validPaths = []
         invalidTraversable = True
         while invalidTraversable:
@@ -92,7 +102,7 @@ class Searcher:
                         illegalPaths.append(self.searchGraph(path[0], path[1]))
             except nx.exception.NetworkXNoPath:
                 continue
-            
+
             for path in illegalPaths:
                 print(path)
                 last_node = path.pop()
@@ -123,7 +133,6 @@ class Searcher:
                                 print('Found route: ' + str(route))
                                 validBroken = False
                             except nx.exception.NetworkXNoPath:
-                                print('Reached This Point')
                                 continue    
             illegalCounter = 0
             for pair in self.__pathsIllegal:
@@ -137,8 +146,8 @@ class Searcher:
                     continue
             if illegalCounter == 0:
               invalidTraversable = False
+              self.drawGraph('outputGraphV2')
             
-
     def computeCutsV1(self, timeout):
         legal = [path for path in self.__pathsLegal]
         illegal = [path for path in self.__pathsIllegal]
@@ -216,6 +225,7 @@ class Searcher:
                 time_remains = False
                 print("Success!!")
                 print("Removed: " + str(removedEdges))
+                self.drawGraph('outputGraphCutsV1')
 
     def computeCutsV2(self, timeout):
         legal = [path for path in self.__pathsLegal]
@@ -265,7 +275,6 @@ class Searcher:
                     illegal = [path for path in self.__pathsIllegal]
                     legal = [path for path in self.__pathsLegal]
                     break
-            # Don't want to use nx exception for loop control
             illegalCounter = 0
             for pair in illegal:
                 try:
@@ -304,12 +313,15 @@ class Searcher:
                 time_remains = False
                 print("Success!!")
                 print("Removed: " + str(removedEdges))
+                self.drawGraph('outputGraphCutsV2')
 
-    def drawGraph(self):
-        self.__graph.drawGraph()
+    def drawGraph(self, fileName):
+        self.__graph.drawGraph(fileName)
 
 if __name__ == "__main__":
     graph = NXInstance("graph.txt")
     searcher = Searcher(graph, "graph.txt")
-    searcher.computeGraphV1()
-    searcher.drawGraph()
+    # searcher.computeGraphV1()
+    # searcher.computeGraphV2()
+    # searcher.computeCutsV1(120)
+    searcher.computeCutsV2(120)

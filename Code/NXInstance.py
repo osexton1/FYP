@@ -30,10 +30,10 @@ class NXInstance:
     def minEdgeCut(self, a, b):
         return nx.minimum_edge_cut(self.__graph, a, b)
 
-    def drawGraph(self):
-        nx.write_graphml(self.__graph, "./outputGraph")
+    def drawGraph(self, fileName):
+        nx.write_graphml(self.__graph, "./%s" % fileName)
         nx.draw_circular(self.__graph, with_labels=True)
-        plt.savefig('outputGraph.png')
+        plt.savefig('%s.png' % fileName)
 
 
 if __name__ == "__main__":
