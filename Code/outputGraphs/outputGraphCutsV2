@@ -35,6 +35,10 @@
       <data key="d2">6</data>
       <data key="d3">1</data>
     </edge>
+    <edge source="Node 3" target="Node 4">
+      <data key="d2">4</data>
+      <data key="d3">1</data>
+    </edge>
     <edge source="Node 4" target="Node 3">
       <data key="d2">4</data>
       <data key="d3">1</data>
@@ -65,10 +69,6 @@
     </edge>
     <edge source="Node 7" target="Node 4">
       <data key="d2">20</data>
-      <data key="d3">1</data>
-    </edge>
-    <edge source="Node 8" target="Node 2">
-      <data key="d2">10</data>
       <data key="d3">1</data>
     </edge>
     <edge source="Node 8" target="Node 4">
