@@ -298,8 +298,8 @@ class Searcher:
         self.__graph.drawGraph(fileName)
 
 if __name__ == "__main__":
-    graph = NXInstance("graph50.txt")
-    searcher = Searcher(graph, "graph50.txt")
+    graph = NXInstance("graph.txt")
+    searcher = Searcher(graph, "graph.txt")
     # searcher.computeGraphV1()
     # searcher.computeGraphV2()
     # searcher.computeCutsV1(120)
