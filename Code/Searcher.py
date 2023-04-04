@@ -10,7 +10,7 @@ class Searcher:
         self.__vertices = self.__graph.getVertices()
         self.__pathsLegal = []
         self.__pathsIllegal = []
-        paths = open('paths.txt', 'r')
+        paths = open('paths50.txt', 'r')
         for path in paths:
             path = path.strip('\n')
             path = path.split(', ')
@@ -69,7 +69,6 @@ class Searcher:
                 last_node = illegalPaths[0].pop()
                 second_last_node = illegalPaths[0].pop()
                 self.removeEdge(second_last_node, last_node)
-                print('Removed Edge: ' + second_last_node + ' -> ' + last_node)
             else:
                 legalCounter = len(validPaths)
                 for path in self.__pathsLegal:
@@ -104,43 +103,31 @@ class Searcher:
                 continue
 
             for path in illegalPaths:
-                print(path)
                 last_node = path.pop()
                 next_node = path.pop()
                 pair = (next_node, last_node)
-                print('Pair: ' + str(pair))
                 self.removeEdge(next_node, last_node)
-                print('Removed Edge: ' + pair[0] + ' -> ' + pair[1] + ' before looping')
                 for validPath in self.__pathsLegal:
-                    print('Valid: ' + str(validPath))
                     try:     
                         self.searchGraph(validPath[0], validPath[1])
                     except nx.exception.NetworkXNoPath:
                         validBroken = True
-                        print('Path broken: ' + str(validPath))
                         while validBroken:
                             # Remove next edge from sequence
                             next_removed = path.pop()
                             self.removeEdge(next_removed, pair[0])
-                            print('Removed Edge: ' + next_removed + ' -> ' + pair[0])
                             # Restore the original removed edge
                             self.addEdge(pair[0], pair[1])
-                            print('Restored Edge: ' + pair[0] + ' -> ' + pair[1])
                             pair = (next_removed, pair[0])
-                            print('Next pair: ' + str(pair)) 
                             try:     
                                 route = self.searchGraph(validPath[0], validPath[1])
-                                print('Found route: ' + str(route))
                                 validBroken = False
                             except nx.exception.NetworkXNoPath:
                                 continue    
             illegalCounter = 0
             for pair in self.__pathsIllegal:
                 try:
-                    print('Testing Illegal Path: %s again' % str(pair))
                     path = self.searchGraph(pair[0], pair[1])
-                    print('Found Illegal Path: %s again' % str(path))
-                    print()
                     illegalCounter += 1
                 except:
                     continue
@@ -160,7 +147,6 @@ class Searcher:
                     print('Testing Illegal Path: ' + str(pair))
                     path = self.searchGraph(pair[0], pair[1])
                     print('Found Illegal Path: ' + str(path))
-                    print()
                     max_index = len(path) - 1
                     remove_index = randint(0, max_index)
                     if remove_index == max_index:
@@ -177,7 +163,6 @@ class Searcher:
                     print('Testing Legal Path: ' + str(pair))
                     path = self.searchGraph(pair[0], pair[1])
                     print('Found Legal Path: ' + str(path))
-                    print()
                 except:
                     # A legal path is broken -> reset and start over
                     print('Failed to find Legal Path')
@@ -193,14 +178,12 @@ class Searcher:
                     print('Testing Illegal Path: %s again' % str(pair))
                     path = self.searchGraph(pair[0], pair[1])
                     print('Found Illegal Path: %s again' % str(path))
-                    print()
                     illegalCounter += 1
                     time_passed = time() - start_time
                     if time_passed < timeout:
                         continue
                     elif time_passed > timeout:
                         time_remains = False
-                        print("Timed Out Illegal")
                         break
                 except:
                     continue
@@ -210,14 +193,15 @@ class Searcher:
                     print('Testing Legal Path: %s again' % str(pair))
                     path = self.searchGraph(pair[0], pair[1])
                     print('Found Legal Path: %s again' % str(path))
-                    print()
                     legalCounter -= 1
                     time_passed = time() - start_time
                     if time_passed < timeout:
                         continue
                     elif time_passed > timeout:
                         time_remains = False
-                        print("Timed Out Legal")
+                        print()
+                        print("Timed Out")
+                        print()
                         break
                 except:
                     break
@@ -238,15 +222,12 @@ class Searcher:
             for edge in self.minEdgeCut(pair[0], pair[1]):
                 if edge not in doNotRemove:
                     doNotRemove.append(edge)
-        print('DO NOT REMOVE: ' + str(doNotRemove))
-        print()
         while time_remains:
             for pair in illegal:
                 try:
                     print('Testing Illegal Path: ' + str(pair))
                     path = self.searchGraph(pair[0], pair[1])
                     print('Found Illegal Path: ' + str(path))
-                    print()
                     max_index = len(path) - 1
                     remove_index = randint(0, max_index)
                     if remove_index == max_index:
@@ -265,7 +246,6 @@ class Searcher:
                     print('Testing Legal Path: ' + str(pair))
                     path = self.searchGraph(pair[0], pair[1])
                     print('Found Legal Path: ' + str(path))
-                    print()
                 except:
                     # A legal path is broken -> reset and start over
                     print('Failed to find Legal Path')
@@ -281,14 +261,12 @@ class Searcher:
                     print('Testing Illegal Path: %s again' % str(pair))
                     path = self.searchGraph(pair[0], pair[1])
                     print('Found Illegal Path: %s again' % str(path))
-                    print()
                     illegalCounter += 1
                     time_passed = time() - start_time
                     if time_passed < timeout:
                         continue
                     elif time_passed > timeout:
                         time_remains = False
-                        print("Timed Out Illegal")
                         break
                 except:
                     continue
@@ -298,14 +276,15 @@ class Searcher:
                     print('Testing Legal Path: %s again' % str(pair))
                     path = self.searchGraph(pair[0], pair[1])
                     print('Found Legal Path: %s again' % str(path))
-                    print()
                     legalCounter -= 1
                     time_passed = time() - start_time
                     if time_passed < timeout:
                         continue
                     elif time_passed > timeout:
                         time_remains = False
-                        print("Timed Out Legal")
+                        print()
+                        print("Timed Out")
+                        print()
                         break
                 except:
                     break
@@ -319,8 +298,8 @@ class Searcher:
         self.__graph.drawGraph(fileName)
 
 if __name__ == "__main__":
-    graph = NXInstance("graph.txt")
-    searcher = Searcher(graph, "graph.txt")
+    graph = NXInstance("graph50.txt")
+    searcher = Searcher(graph, "graph50.txt")
     # searcher.computeGraphV1()
     # searcher.computeGraphV2()
     # searcher.computeCutsV1(120)
