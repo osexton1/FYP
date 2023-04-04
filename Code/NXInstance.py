@@ -22,7 +22,10 @@ class NXInstance:
         return nx.dijkstra_path(self.__graph, a, b)
 
     def removeEdge(self, a, b):
-        self.__graph.remove_edge(a, b)
+        try:
+            self.__graph.remove_edge(a, b)
+        except nx.exception.NetworkXError:
+            return      
 
     def addEdge(self, a, b):
         self.__graph.add_edge(a, b)
