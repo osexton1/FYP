@@ -10,7 +10,7 @@ class Searcher:
         self.__vertices = self.__graph.getVertices()
         self.__pathsLegal = []
         self.__pathsIllegal = []
-        paths = open('paths50.txt', 'r')
+        paths = open('paths.txt', 'r')
         for path in paths:
             path = path.strip('\n')
             path = path.split(', ')
@@ -291,6 +291,7 @@ class Searcher:
             if illegalCounter == 0 and legalCounter == 0:
                 time_remains = False
                 print("Success!!")
+                print("Removed %d edges" % len(removedEdges))
                 print("Removed: " + str(removedEdges))
                 self.drawGraph('outputGraphCutsV2')
 
