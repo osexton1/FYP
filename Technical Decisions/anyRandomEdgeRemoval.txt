@@ -1,0 +1,15 @@
+def anyRandomEdgeRemoval():
+    Legal = []
+    Illegal = []
+
+    for each pair in Illegal:
+        if ∃path between pair:
+            randomly removeEdge
+    if ∃pair in Legal with no path:
+        (1) Restore initial state and repeat from start <- Random Probing
+    if ∃pair in Illegal with path and not exceeds time limit:
+        loop from start
+    else if time limit exceeded:
+        report timeout
+    else:
+        report success

@@ -1,10 +1,18 @@
-def computeCuts():
+def restrictedRandomEdgeRemoval():
     Legal = []
     Illegal = []
+    doNotRemove = []
 
+    for each pair in Legal:
+        compute the minimum edge cut set
+        append these to doNotRemove
     for each pair in Illegal:
         if ∃path between pair:
-            randomly removeEdge
+            randomly select an edge in path
+            if edge in doNotRemove:
+                ignore
+            else:
+                remove the edge
     if ∃pair in Legal with no path:
         (1) Restore initial state and repeat from start <- Random Probing
     if ∃pair in Illegal with path and not exceeds time limit:

@@ -1,4 +1,4 @@
-def computeGraph():
+def greedyLastEdgeRemoval():
     invalidPaths = True
 
     while invalidPaths:
