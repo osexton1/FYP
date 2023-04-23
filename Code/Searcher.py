@@ -42,16 +42,16 @@ class Searcher:
     def computeGraphV1(self):
         invalidTraversable = True
         validPaths = []
-        try:
-            for path in self.__pathsLegal:
-                validPaths.append(self.searchGraph(path[0], path[1]))
-        except nx.exception.NetworkXNoPath:
-            """
-                If an error occurs here, it is never possible to connect a pair
-                of nodes in a legal path
-            """
-            print('It is not possible to compute such a graph')
-            invalidTraversable = False
+        for path in self.__pathsLegal:
+            try:
+                self.searchGraph(path[0], path[1])
+            except nx.exception.NetworkXNoPath:
+                """
+                    If an error occurs here, it is never possible to connect a pair
+                    of nodes in a legal path
+                """
+                print('It is not possible to compute such a graph')
+                invalidTraversable = False
 
         while invalidTraversable:
             illegalPaths = []
@@ -87,6 +87,16 @@ class Searcher:
     def computeGraphV2(self):
         validPaths = []
         invalidTraversable = True
+        for path in self.__pathsLegal:
+            try:
+                self.searchGraph(path[0], path[1])
+            except nx.exception.NetworkXNoPath:
+                """
+                    If an error occurs here, it is never possible to connect a pair
+                    of nodes in a legal path
+                """
+                print('It is not possible to compute such a graph')
+                invalidTraversable = False
         while invalidTraversable:
             illegalPaths = []
             try:
@@ -123,7 +133,9 @@ class Searcher:
                                 route = self.searchGraph(validPath[0], validPath[1])
                                 validBroken = False
                             except nx.exception.NetworkXNoPath:
-                                continue    
+                                print('It is not possible to compute such a graph')
+                                invalidTraversable, validBroken = False
+                                break    
             illegalCounter = 0
             for pair in self.__pathsIllegal:
                 try:
@@ -132,6 +144,7 @@ class Searcher:
                 except:
                     continue
             if illegalCounter == 0:
+              print("It is possible to compute a graph where no illegal paths are traversable")
               invalidTraversable = False
               self.drawGraph('outputGraphV2')
             
@@ -141,6 +154,16 @@ class Searcher:
         start_time = time()
         removedEdges = []
         time_remains = True
+        for path in self.__pathsLegal:
+            try:
+                self.searchGraph(path[0], path[1])
+            except nx.exception.NetworkXNoPath:
+                """
+                    If an error occurs here, it is never possible to connect a pair
+                    of nodes in a legal path
+                """
+                print('It is not possible to compute such a graph')
+                time_remains = False
         while time_remains:
             for pair in illegal:
                 try:
@@ -218,6 +241,16 @@ class Searcher:
         doNotRemove = []
         removedEdges = []
         time_remains = True
+        for path in self.__pathsLegal:
+            try:
+                self.searchGraph(path[0], path[1])
+            except nx.exception.NetworkXNoPath:
+                """
+                    If an error occurs here, it is never possible to connect a pair
+                    of nodes in a legal path
+                """
+                print('It is not possible to compute such a graph')
+                time_remains = False
         for pair in legal:
             for edge in self.minEdgeCut(pair[0], pair[1]):
                 if edge not in doNotRemove:
